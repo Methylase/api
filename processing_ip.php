@@ -12,13 +12,14 @@
     $response_json = curl_exec($ch);
     curl_close($ch);
     $response=json_decode($response_json, true);
-    if($response["status"]){
-        $data["status"] = true;
+    if($response['status']==true){
+        $data['status'] = $response['status'];
+    }else if($response['status']==null){
+        $data['status']= false;
     }else{
-        $data["status"] =false;
+        $data["status"] = $response['status'];
     }
     echo json_encode($data);
+           
 }
-
-
 ?>

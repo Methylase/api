@@ -2,7 +2,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "smoothless";
-	$dbname = "survey";
+	$dbname = "survey_experiment";
 	// Create connection
 	$conn = mysqli_connect($servername, $username, $password, $dbname);
 	// Check connection
@@ -51,29 +51,25 @@
 	{
 		global $conn;
 		$response=array();
-		$query="SELECT IP FROM survey_experiment";
-		$result=mysqli_query($conn, $query);
-		if( mysqli_num_rows($result) > 0){
-		  $query="SELECT IP FROM survey_experiment";
-		  if($ip_address != "")
-		  {
-		    $query.=" WHERE IP=".$ip_address." LIMIT 1";
-		  }
-		  $result=mysqli_query($conn, $query);
-		  if($result && mysqli_num_rows($result) ==1){
-			$response=array(
-			  'status' => false
-			);
-		  }else{
-			$response=array(
-			  'status' => true
-			);
-		  }		  
-		}else{
-		  $response=array(
-			'status' => false
-		  );		  
-		}
+        $query = "SELECT IP FROM survery_experiment";
+        $result = mysqli_query($conn, $query);
+        if(mysqli_num_rows($result) == null){
+		    $query="SELECT IP FROM survey_experiment WHERE IP='$ip_address'";
+			$result=mysqli_query($conn, $query);
+			if(mysqli_num_rows($result) > 0){
+			  $response=array(
+				'status' => true
+			  );
+			}else{
+			  $response=array(
+				'status' => false			 
+             );
+			}				
+		 }else{
+             $response=array(
+                    'status'=> false
+             );
+         }
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
@@ -81,7 +77,6 @@
 	{
 		global $conn;
 		$query="SELECT questions_limit FROM survey_questions_limit LIMIT 1";
-		$response=array();
 		$result=mysqli_query($conn, $query);
 		$row= mysqli_fetch_assoc($result);
 		$questionType=$row['questions_limit'];
@@ -98,7 +93,6 @@
 		}else{
 		  $query="UPDATE survey_questions_limit SET questions_limit='$questionType'";
 		  if(mysqli_query($conn, $query)){
-			$response=array();
 			$query="SELECT questions_limit FROM survey_questions_limit LIMIT 1";
 			$result=mysqli_query($conn, $query);
 			$row= mysqli_fetch_assoc($result);
